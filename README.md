@@ -26,6 +26,12 @@ Seq2Vec fast sequence vectorization:
 
 ```
 
+## Output
+
+For fast processing, we create separate files for each thread. In the output directory there will be several `*.txt` files. Use command `cat *.txt | sort -n | cut -d' ' -f2- > vectors.text`. Please use a different extension since we use a wildcard input on `txt`.
+
+We also provide a script to convert to `h5`. Read below;
+
 ## Notes
 
 * The default k-value is 3 and usually keep it under 8.
