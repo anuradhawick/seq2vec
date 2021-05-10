@@ -1,6 +1,6 @@
 # Seq2Vec - DNA sequence vectorization
 
-This too is intended to be used for Machine Learning related tasks of Bioinformatics. You can use Seq2Vec to convert FASTA or FASTQ data sets into k-mer frequency vectors. We use memory mapped files to read inputs faster and multi-worker pipeline to vectorise the sequences.
+This tool is intended to be used for data generation in Bioinformatics Machine Learning related tasks. You can use Seq2Vec to convert FASTA or FASTQ data sets into k-mer frequency vectors. We use memory mapped files to read inputs faster and multi-worker pipeline to vectorise the sequences.
 
 ## Downloading and Compiling
 
