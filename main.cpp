@@ -27,11 +27,10 @@ void run(string input, string outdir, int ksize, int threads)
             ofstream output(outdir + "/" + lexical_cast<string>(this_thread::get_id()) + ".txt", ios::out);
             bool found = true;
             string outstr = "";
+            Seq seq;
 
             while (found)
             {
-                Seq seq;
-
                 {
                     unique_lock<mutex> lock(mux);
                     found = reader.get_seq(seq);

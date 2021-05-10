@@ -9,7 +9,7 @@ using namespace std;
 class KmerCounter
 {
 private:
-    uint64_t kmer_size = 0;
+    u_int64_t kmer_size = 0;
     u_int64_t kmer_counts_length = 0;
     vector<u_int64_t> kmer_inds_index;
 
@@ -52,7 +52,7 @@ private:
             }
         }
 
-        kmer_inds_index.resize((u_int64_t)pow(kmer_size, (u_int64_t)4), 0);
+        kmer_inds_index.resize((u_int64_t)pow(4, kmer_size), 0);
 
         for (auto its = kmer_inds.begin(); its != kmer_inds.end(); its++)
         {
