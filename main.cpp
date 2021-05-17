@@ -28,7 +28,7 @@ void run(string input, string outdir, int ksize, int threads, bool use_mm)
     KmerCounter kc(ksize);
     asio::thread_pool pool(threads);
 
-    for (size_t i = 0; i < threads * 10; i++)
+    for (size_t i = 0; i < threads; i++)
     {
         asio::post(pool, [&reader, &kc, &outdir]() {
             ofstream output(outdir + "/" + lexical_cast<string>(this_thread::get_id()) + ".txt", ios::out);
