@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(seq2vec VERSION 0.1.0)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp -O3")
+
+
+set(CMAKE_CXX_FLAGS "-Wall -Wextra ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG "-g ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS}")
+
 include(CTest)
 enable_testing()
 
@@ -31,4 +38,5 @@ target_link_libraries(${PROJECT_NAME}
     ${EXTRA_LINKS} 
     ${Boost_LIBRARIES}
     pthread
+    z
 )

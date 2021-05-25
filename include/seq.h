@@ -2,6 +2,10 @@
 #include <string>
 #include <fstream>
 #include <boost/iostreams/device/mapped_file.hpp>
+#include <zlib.h>
+#include "kseq.h"
+
+KSEQ_INIT(gzFile, gzread)
 
 using namespace std;
 using namespace boost;
@@ -202,7 +206,7 @@ public:
     }
 };
 
-class SeqReader : public Reader
+class SeqReaderGL : public Reader
 {
 private:
     string path;
@@ -214,13 +218,13 @@ private:
     int mode;
 
 public:
-    SeqReader(string path)
+    SeqReaderGL(string path)
     {
         path = path;
         file_handler.open(path, ios::in);
     }
 
-    ~SeqReader()
+    ~SeqReaderGL()
     {
         file_handler.close();
     }
@@ -319,5 +323,45 @@ public:
         {
             return false;
         }
+    }
+};
+
+class SeqReaderKS: public Reader
+{
+private:
+    gzFile fp;
+    kseq_t *ks;
+    int ret;
+
+public:
+    SeqReaderKS(string path)
+    {
+        fp = gzopen(path.c_str(), "r");
+        ks = kseq_init(fp);
+    }
+
+    ~SeqReaderKS()
+    {
+        kseq_destroy(ks);
+        gzclose(fp);
+    }
+
+    // TODO needs to be implemented
+    size_t get_seq_count()
+    {
+        return -1;
+    }
+
+    bool get_seq(Seq &seq)
+    {
+        if ((ret = kseq_read(ks)) >= 0)
+        {
+            // using raw pointers can have unwated side effects
+            // better to copy than debug
+            seq.seq_string = string(ks->seq.s);
+            seq.seq_header = string(ks->name.s);
+            return true;
+        }
+        return false;
     }
 };

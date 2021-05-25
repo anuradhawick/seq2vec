@@ -71,8 +71,7 @@ public:
     {
         vector<double> profile(kmer_counts_length, 0);
         double total = 0;
-        long len = 0;
-        u_int64_t val = 0;
+        u_int64_t val = 0, len = 0;
 
         for (int i = 0; i < (int)seq.length(); i++)
         {
