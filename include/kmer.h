@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <valarray>
 #include <map>
 #include <cmath>
 
@@ -61,18 +62,17 @@ private:
 
 public:
     u_int64_t kmer_counts_length = 0;
-    
+
     KmerCounter(uint64_t kmer_size)
     {
         this->kmer_size = kmer_size;
         compute_kmer_inds();
     }
 
-    vector<double> count_kmers(string seq)
+    valarray<double> count_kmers(string seq)
     {
-        vector<double> profile(kmer_counts_length, 0);
+        valarray<double> profile((double)0, kmer_counts_length);
         u_int64_t val = 0, len = 0;
-        double total = 0;
 
         for (size_t i = 0; i < seq.length(); i++)
         {
@@ -92,14 +92,10 @@ public:
                 // use val as the kmer for counting
                 len--;
                 profile[kmer_inds_index[val]]++;
-                total++;
             }
         }
 
-        for (size_t i = 0; i < profile.size(); i++)
-        {
-            profile[i] /= max(1.0, total);
-        }
+        profile  = profile / max(1.0, profile.sum());
 
         return profile;
     }

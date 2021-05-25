@@ -7,6 +7,8 @@
 #include <zlib.h>
 #include <omp.h>
 #include <thread>
+#include <valarray>
+#include <vector>
 
 #include <boost/program_options.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
@@ -58,7 +60,7 @@ void off_load_process(string &output, KmerCounter &kc, int &threads)
         if (batch.size() > 0)
         {
             batch_size = batch.size();
-            vector<vector<double>> results(batch_size);
+            vector<valarray<double>> results(batch_size);
             ostringstream outss;
             outss.precision(6);
             outss << fixed;
@@ -162,7 +164,7 @@ void run(string &input, string &output, int &ksize, int &threads)
                 if (has_read)
                 {
                     // process the read
-                    vector<double> dvec = kc.count_kmers(seq.seq_string);
+                    valarray<double> dvec = kc.count_kmers(seq.seq_string);
                     ostringstream outss;
                     outss.precision(6);
                     outss << fixed;
