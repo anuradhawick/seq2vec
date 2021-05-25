@@ -10,7 +10,6 @@ class KmerCounter
 {
 private:
     u_int64_t kmer_size = 0;
-    u_int64_t kmer_counts_length = 0;
     vector<u_int64_t> kmer_inds_index;
 
     KmerCounter();
@@ -61,6 +60,8 @@ private:
     }
 
 public:
+    u_int64_t kmer_counts_length = 0;
+    
     KmerCounter(uint64_t kmer_size)
     {
         this->kmer_size = kmer_size;

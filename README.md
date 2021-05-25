@@ -1,10 +1,10 @@
 # Seq2Vec - DNA sequence vectorization
 
-This tool is intended to be used for data generation in Bioinformatics Machine Learning related tasks. You can use Seq2Vec to convert FASTA or FASTQ data sets into k-mer frequency vectors. We use memory mapped files to read inputs faster and multi-worker pipeline to vectorise the sequences.
+This tool is intended to be used for data generation in Bioinformatics Machine Learning related tasks. You can use Seq2Vec to convert FASTA or FASTQ data sets into k-mer frequency vectors. We use memory mapped files to write faster and a multi-worker pipeline to vectorise the sequences.
 
 ## Downloading and Compiling
 
-You need boost c++ library to compile this. Typically `sudo apt-get install libboost-all-dev` works on linux (or `brew install boost` in MaxOS).
+You need boost (1.72+) c++ library to compile this. Typically `sudo apt-get install libboost-all-dev` works on linux (or `brew install boost` in MaxOS).
 
 ```
 git clone https://github.com/anuradhawick/seq2vec.git
@@ -23,7 +23,6 @@ Seq2Vec fast sequence vectorization:
   -o [ --output ] arg       output vectors path
   -k [ --k-size ] arg (=3)  set k-mer size
   -t [ --threads ] arg (=8) set thread count
-  -m [ --memory-mapped ]    use memory mapped input (best for fastq)
 
 ```
 

@@ -10,6 +10,9 @@
 
 #include <boost/program_options.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
+#include <boost/iostreams/stream.hpp>
+#include <boost/asio.hpp>
+#include <boost/timer/progress_display.hpp>
 
 #include "./include/seq.h"
 #include "./include/kmer.h"
@@ -17,6 +20,9 @@
 using namespace std;
 
 namespace po = boost::program_options;
+namespace bio = boost::iostreams;
+namespace basio = boost::asio;
+
 mutex mux;
 queue<string> reads_queue;
 condition_variable condition;
@@ -54,7 +60,8 @@ void off_load_process(string &output, KmerCounter &kc, int &threads)
             batch_size = batch.size();
             vector<vector<double>> results(batch_size);
             ostringstream outss;
-
+            outss.precision(6);
+            outss << fixed;
 
 #pragma omp parallel for num_threads(threads) schedule(dynamic, 1)
             for (size_t i = 0; i < batch_size; i++)
@@ -64,11 +71,17 @@ void off_load_process(string &output, KmerCounter &kc, int &threads)
 
             for (auto dvec : results)
             {
-                copy(dvec.begin(), dvec.end() - 1, ostream_iterator<double>(outss, "\t"));
-                outss << dvec.back();
-                outss << endl;
+                for (size_t j = 0; j < dvec.size(); j++)
+                {
+                    outss << dvec[j];
+                    if (j < dvec.size() - 1)
+                    {
+                        outss << ' ';
+                    }
+                }
+                outss << '\n';
             }
-            
+
             outfs << outss.str();
             outss.clear();
 
@@ -88,7 +101,7 @@ void off_load_process(string &output, KmerCounter &kc, int &threads)
     outfs.close();
 }
 
-void io_thread(Reader &reader)
+void io_thread(SeqReader &reader)
 {
     Seq seq;
     int count = 0;
@@ -97,7 +110,7 @@ void io_thread(Reader &reader)
     {
         {
             unique_lock<mutex> lock(mux);
-            condition.wait(lock, [] { return reads_queue.size() < 50000; });
+            condition.wait(lock, [] { return reads_queue.size() < 10000; });
             reads_queue.push(seq.seq_string);
         }
         count++;
@@ -110,42 +123,86 @@ void io_thread(Reader &reader)
     terminate_threads = true;
 }
 
-void run(string &input, string &output, int &ksize, int &threads, bool use_mm)
+void run(string &input, string &output, int &ksize, int &threads)
 {
-    Reader *reader;
-    if (use_mm)
-    {
-        reader = new SeqReaderMM(input);
-    }
-    else
-    {
-        reader = new SeqReaderKS(input);
-    }
+    SeqReader reader(input);
     KmerCounter kc(ksize);
 
-    thread iot(io_thread, std::ref(*reader));
-    thread kct(off_load_process, std::ref(output), std::ref(kc), std::ref(threads));
+    cout << "Counting sequences" << endl;
+    size_t total_reads = reader.get_seq_count();
+    cout << total_reads <<  " sequences found" << endl;
+    size_t per_line_size = kc.kmer_counts_length * (8 + 1);
+    size_t estimated_file_size = total_reads * per_line_size; // space after each value + newline (9 ASCII chars per value)
+    
+    bio::mapped_file_params params;
+    params.path = output;
+    params.new_file_size = estimated_file_size;
+    params.flags = bio::mapped_file::mapmode::readwrite;
+    bio::mapped_file_sink mmout(params);
 
-    iot.join();
-    kct.join();
+    asio::thread_pool pool(threads);
+    boost::timer::progress_display pd(total_reads);
+    mutex reader_mux;
 
-    delete reader;
+    for (int _ = 0; _ < threads * 5; _++)
+    {
+        asio::post(pool, [&reader_mux, &estimated_file_size, &reader, &pd, &mmout, &kc, &per_line_size]() {
+            bool has_read = true;
+            Seq seq;
+            auto sptr = mmout.begin();
+
+            while (true)
+            {
+                {
+                    unique_lock<mutex> lock(reader_mux);
+                    has_read = reader.get_seq(seq);
+                    ++pd;
+                }
+
+                if (has_read)
+                {
+                    // process the read
+                    vector<double> dvec = kc.count_kmers(seq.seq_string);
+                    ostringstream outss;
+                    outss.precision(6);
+                    outss << fixed;
+
+                    for (size_t j = 0; j < dvec.size(); j++)
+                    {
+                        outss << dvec[j];
+                        if (j < dvec.size() - 1)
+                        {
+                            outss << ' ';
+                        }
+                    }
+                    outss << '\n';
+
+                    memcpy(sptr + seq.seq_id * per_line_size, outss.str().c_str(), outss.str().size());
+                }
+                else
+                {
+                    break;
+                }
+            }
+        });
+    }
+
+    pool.join();
+    mmout.close();
 }
 
 int main(int ac, char **av)
 {
     int ksize, threads;
     string input, output;
-    bool use_mm = false;
 
     po::options_description desc("Seq2Vec fast sequence vectorization");
-    
+
     desc.add_options()("help,h", "show help message");
     desc.add_options()("file,f", po::value<string>(&input)->required(), "input file path");
     desc.add_options()("output,o", po::value<string>(&output)->required(), "output vectors path");
     desc.add_options()("k-size,k", po::value<int>(&ksize)->default_value(3), "set k-mer size");
     desc.add_options()("threads,t", po::value<int>(&threads)->default_value(8), "set thread count");
-    desc.add_options()("memory-mapped,m", "use memory mapped input (best for fastq)");
 
     po::variables_map vm;
     po::store(po::parse_command_line(ac, av, desc), vm);
@@ -156,14 +213,10 @@ int main(int ac, char **av)
         return 1;
     }
 
-    if (vm.count("memory-mapped"))
-    {
-        use_mm = true;
-    }
-
     po::notify(vm);
 
-    run(input, output, ksize, threads, use_mm);
+    cout << "Starting Seq2Vec sequence vectorization" << endl;
+    run(input, output, ksize, threads);
 
     return 0;
 }
