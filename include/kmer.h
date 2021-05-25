@@ -70,10 +70,10 @@ public:
     vector<double> count_kmers(string seq)
     {
         vector<double> profile(kmer_counts_length, 0);
-        double total = 0;
         u_int64_t val = 0, len = 0;
+        double total = 0;
 
-        for (int i = 0; i < (int)seq.length(); i++)
+        for (size_t i = 0; i < seq.length(); i++)
         {
             if (!(seq[i] == 'A' || seq[i] == 'C' || seq[i] == 'G' || seq[i] == 'T'))
             {
