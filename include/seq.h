@@ -56,7 +56,7 @@ public:
         fsize = mmap.size();
         assert(fsize > 0);
 
-        if (static_cast<const char>(fptr[0]) == '>')
+        if (static_cast<char>(fptr[0]) == '>')
         {
             mode = 1;
         }
@@ -150,7 +150,7 @@ public:
                     return true;
                 }
                 // if next line start with > sequence over
-                if (static_cast<const char>(tsptr[0]) == '>')
+                if (static_cast<char>(tsptr[0]) == '>')
                 {
                     return true;
                 }
