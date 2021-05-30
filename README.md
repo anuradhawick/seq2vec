@@ -10,6 +10,12 @@ You need boost (1.72+) c++ library to compile this. Typically `sudo apt-get inst
 git clone https://github.com/anuradhawick/seq2vec.git
 mkdir build; cd build; cmake ..; make -j8
 ```
+In OSX use following;
+```
+git clone https://github.com/anuradhawick/seq2vec.git
+mkdir build; cd build; cmake -DCMAKE_C_COMPILER=CLANG_PATH _DCMAKE_CXX_COMPILER=CLANG++PATH  ..; make -j8
+```
+To get `CLANG_PATH` and `CLANG++PATH` use `which clang` and `which clang++` respectively.
 
 ## Usage
 Binary will be available at build/seq2vec. Help is available with `-h` command;
