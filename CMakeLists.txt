@@ -3,7 +3,6 @@ project(seq2vec VERSION 0.1.0)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp -O3")
 
-
 set(CMAKE_CXX_FLAGS "-Wall -Wextra ${CMAKE_C_FLAGS}")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS}")

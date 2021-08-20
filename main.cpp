@@ -14,7 +14,6 @@
 #include <boost/iostreams/device/mapped_file.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/asio.hpp>
-#include <boost/timer/progress_display.hpp>
 
 #include "./include/seq.h"
 #include "./include/kmer.h"
@@ -29,6 +28,41 @@ mutex mux;
 queue<string> reads_queue;
 condition_variable condition;
 volatile bool terminate_threads;
+
+class ProgressDisplay
+{
+private:
+    int total = 0;
+    int progress = 0;
+public:
+    ProgressDisplay(int total)
+    {
+        this->total = total;
+    }
+
+    void operator++(int)
+    {
+        this->operator++();
+    }
+
+    void operator++()
+    {
+        this->progress++;
+        this->print();
+    }
+
+    void end()
+    {
+        this->progress=this->total;
+        cout << "Completed " << fixed << setprecision(2) << 100.00 << "%       " << endl << flush;
+    }
+
+    void print()
+    {
+        float percentage = 100.0 * static_cast<float>(this->progress)/static_cast<float>(this->total);
+        cout << "Completed " << fixed << setprecision(2) << percentage << "%             \r" << flush;
+    }
+};
 
 void off_load_process(string &output, KmerCounter &kc, int &threads)
 {
@@ -143,7 +177,7 @@ void run(string &input, string &output, int &ksize, int &threads)
     bio::mapped_file_sink mmout(params);
 
     asio::thread_pool pool(threads);
-    boost::timer::progress_display pd(total_reads);
+    ProgressDisplay pd(total_reads);
     mutex reader_mux;
 
     for (int _ = 0; _ < threads * 5; _++)
@@ -158,7 +192,7 @@ void run(string &input, string &output, int &ksize, int &threads)
                 {
                     unique_lock<mutex> lock(reader_mux);
                     has_read = reader.get_seq(seq);
-                    ++pd;
+                    pd++;
                 }
 
                 if (has_read)
@@ -188,9 +222,9 @@ void run(string &input, string &output, int &ksize, int &threads)
             }
         });
     }
-
     pool.join();
     mmout.close();
+    pd.end();
 }
 
 int main(int ac, char **av)
