@@ -9,6 +9,7 @@
 #include <thread>
 #include <valarray>
 #include <vector>
+#include <iomanip>
 
 #include <boost/program_options.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
