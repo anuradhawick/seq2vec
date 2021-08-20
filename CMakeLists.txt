@@ -11,7 +11,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS}")
 include(CTest)
 enable_testing()
 
-list(APPEND EXTRA_LIB_DIRS "")
 list(APPEND EXTRA_INCLUDE_DIRS "")
 list(APPEND EXTRA_LINKS "")
 
@@ -30,10 +29,6 @@ target_include_directories(${PROJECT_NAME}
 	${EXTRA_INCLUDE_DIRS}
 )
 
-target_link_directories(${PROJECT_NAME} 
-	PUBLIC
-	${EXTRA_LIB_DIRS}
-)
 target_link_libraries(${PROJECT_NAME} 
     ${EXTRA_LINKS} 
     ${Boost_LIBRARIES}
