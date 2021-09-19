@@ -2,6 +2,23 @@
 
 This tool is intended to be used for data generation in Bioinformatics Machine Learning related tasks. You can use Seq2Vec to convert FASTA or FASTQ data sets into k-mer frequency vectors. We use memory mapped files to write faster and a multi-worker pipeline to vectorise the sequences.
 
+## Citing
+
+[![DOI](https://zenodo.org/badge/362989776.svg)](https://zenodo.org/badge/latestdoi/362989776)
+
+```bibtex
+@software{anuradha_wickramarachchi_2021_5515743,
+  author       = {Anuradha Wickramarachchi},
+  title        = {anuradhawick/seq2vec: release v1.0},
+  month        = sep,
+  year         = 2021,
+  publisher    = {Zenodo},
+  version      = {v1.0},
+  doi          = {10.5281/zenodo.5515743},
+  url          = {https://doi.org/10.5281/zenodo.5515743}
+}
+```
+
 ## Downloading and Compiling
 
 You need boost (1.72+) c++ library to compile this. Typically `sudo apt-get install libboost-all-dev` works on linux (or `brew install boost` in MaxOS).
