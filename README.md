@@ -19,6 +19,20 @@ This tool is intended to be used for data generation in Bioinformatics Machine L
 }
 ```
 
+
+## ❗Note for HPC environments
+
+You typically have Linux modules in HPC environments that facilitate loading Boost C++ headers. Hence, CMAKE file is slightly different. Please build using following commands. This workaround should ideally work and have been tested on NCI Australia [https://nci.org.au/](https://nci.org.au/). If not please submit an issue I will try my best to give a workaround.
+
+```
+git clone https://github.com/anuradhawick/seq2vec.git
+cd seq2vec
+rm CMakeLists.txt;
+mv CMakeLists2.txt CMakeLists.txt;
+mkdir build; cd build; cmake ..; make -j8
+```
+
+
 ## Downloading and Compiling
 
 You need boost (1.72+) c++ library to compile this. Typically `sudo apt-get install libboost-all-dev` works on linux (or `brew install boost` in MaxOS).
