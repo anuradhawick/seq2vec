@@ -73,18 +73,22 @@ public:
     {
         valarray<double> profile((double)0, kmer_counts_length);
         u_int64_t val = 0, len = 0;
+        char seqChar;
 
         for (size_t i = 0; i < seq.length(); i++)
         {
-            if (!(seq[i] == 'A' || seq[i] == 'C' || seq[i] == 'G' || seq[i] == 'T' || seq[i] == 'a' || seq[i] == 'c' || seq[i] == 'g' || seq[i] == 't'))
+            seqChar = toupper(seq[i]);
+
+            if (!(seqChar == 'A' || seqChar == 'C' || seqChar == 'G' || seqChar == 'T'))
             {
                 len = 0;
                 val = 0;
                 continue;
             }
+            
             val = (val << 2);
             val = val & ((u_int64_t)pow(4, kmer_size) - 1);
-            val += (seq[i] >> 1 & 3);
+            val += (seqChar >> 1 & 3);
             len++;
 
             if (len == kmer_size)
