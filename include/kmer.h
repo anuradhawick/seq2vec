@@ -76,7 +76,7 @@ public:
 
         for (size_t i = 0; i < seq.length(); i++)
         {
-            if (!(seq[i] == 'A' || seq[i] == 'C' || seq[i] == 'G' || seq[i] == 'T'))
+            if (!(seq[i] == 'A' || seq[i] == 'C' || seq[i] == 'G' || seq[i] == 'T' || seq[i] == 'a' || seq[i] == 'c' || seq[i] == 'g' || seq[i] == 't'))
             {
                 len = 0;
                 val = 0;
