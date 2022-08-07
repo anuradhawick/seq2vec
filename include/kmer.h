@@ -12,6 +12,8 @@ class KmerCounter
 private:
     u_int64_t kmer_size = 0;
     vector<u_int64_t> kmer_inds_index;
+    // A=00, C=01, T=10, G=11
+    u_int64_t reverse_complements[4] = { 0b10, 0b11, 0b00, 0b01 };
 
     KmerCounter();
 
@@ -72,7 +74,9 @@ public:
     valarray<double> count_kmers(string seq)
     {
         valarray<double> profile((double)0, kmer_counts_length);
-        u_int64_t val = 0, len = 0;
+        // val: forward and rval: reverse complements
+        // len==k if the k-mer is correct with [acgtACGT]{k}
+        u_int64_t val = 0, rval = 0, len = 0;
         char seqChar;
 
         for (size_t i = 0; i < seq.length(); i++)
@@ -83,13 +87,18 @@ public:
             {
                 len = 0;
                 val = 0;
+                rval = 0;
                 continue;
             }
             
             val = (val << 2);
             val = val & ((u_int64_t)pow(4, kmer_size) - 1);
             val += (seqChar >> 1 & 3);
+            rval += (reverse_complements[(seqChar >> 1 & 3)]<<(kmer_size*2));
+            rval >>=2;
+            rval = rval & ((u_int64_t)pow(4, kmer_size) - 1);
             len++;
+
 
             if (len == kmer_size)
             {
