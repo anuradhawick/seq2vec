@@ -1,4 +1,4 @@
 .vscode
-build*
+build
 test*
 boost*
