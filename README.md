@@ -20,56 +20,34 @@ This tool is intended to be used for data generation in Bioinformatics Machine L
 ```
 
 
-## ❗Note for HPC environments
-
-You typically have Linux modules in HPC environments that facilitate loading Boost C++ headers. Hence, CMAKE file is slightly different. Please build using following commands. This workaround should ideally work and have been tested on NCI Australia [https://nci.org.au/](https://nci.org.au/). If not please submit an issue I will try my best to give a workaround.
-
-```
-git clone https://github.com/anuradhawick/seq2vec.git
-cd seq2vec
-rm CMakeLists.txt;
-mv CMakeLists2.txt CMakeLists.txt;
-mkdir build; cd build; cmake ..; make -j8
-```
-
-
 ## Downloading and Compiling
 
-You need boost (1.72+) c++ library to compile this. Typically `sudo apt-get install libboost-all-dev` works on linux (or `brew install boost` in MaxOS).
+First download the repository. The script named `build.sh` has all the required steps automated for easy compilation.
 
 ```
 git clone https://github.com/anuradhawick/seq2vec.git
 cd seq2vec
-mkdir build; cd build; cmake ..; make -j8
+./build.sh
 ```
-In OSX use following;
-```
-git clone https://github.com/anuradhawick/seq2vec.git
-cd seq2vec
-mkdir build; cd build; cmake -DCMAKE_C_COMPILER=CLANG_PATH _DCMAKE_CXX_COMPILER=CLANG++PATH  ..; make -j8
-```
+
 To get `CLANG_PATH` and `CLANG++PATH` use `which clang` and `which clang++` respectively.
 
 ## Usage
 Binary will be available at build/seq2vec. Help is available with `-h` command;
 
 ```
-./seq2vec -h
-
 Seq2Vec fast sequence vectorization:
   -h [ --help ]             show help message
   -f [ --file ] arg         input file path
   -o [ --output ] arg       output vectors path
+  -m [ --type ] arg (=csv)  output type, should be one of csv, tsv
   -k [ --k-size ] arg (=3)  set k-mer size
   -t [ --threads ] arg (=8) set thread count
-
 ```
 
 ## Output
 
 A text file with the output will be generated at the output provided as the `-o` argument.
-
-We also provide a script to convert to `h5`. Read below;
 
 ## Notes
 
@@ -98,8 +76,5 @@ You can find the vectors inside the `h5` file `vectors` dataset.
 
 * In linux use `cut -d' ' -f2- <SEQ2VEC OUTDIR>/gathered-sorted.txt > vectors.txt` to obtain vectors without seq ids. This can later be loaded to numpy as `np.loadtxt("vectors.txt")`. -->
 
-## Using the Seq2Vec lib
-
-You can use our sequence reader by simply adding `include` folder to your project. It is header only!
 
 ***Have a good one!* 😃**
