@@ -35,12 +35,12 @@ Binary will be available at build/seq2vec. Help is available with `-h` command;
 
 ```
 Seq2Vec fast sequence vectorization:
-  -h [ --help ]             show help message
-  -f [ --file ] arg         input file path
-  -o [ --output ] arg       output vectors path
-  -m [ --type ] arg (=csv)  output type, should be one of csv, tsv
-  -k [ --k-size ] arg (=3)  set k-mer size
-  -t [ --threads ] arg (=8) set thread count
+  -h [ --help ]              show help message
+  -f [ --file ] arg          input file path
+  -o [ --output ] arg        output vectors path
+  -x [ --preset ] arg (=csv) output type, should be one of csv, tsv, or json
+  -k [ --k-size ] arg (=3)   set k-mer size
+  -t [ --threads ] arg (=8)  set thread count
 ```
 
 ## Output
