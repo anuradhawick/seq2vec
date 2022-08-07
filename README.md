@@ -30,8 +30,6 @@ cd seq2vec
 ./build.sh
 ```
 
-To get `CLANG_PATH` and `CLANG++PATH` use `which clang` and `which clang++` respectively.
-
 ## Usage
 Binary will be available at build/seq2vec. Help is available with `-h` command;
 
