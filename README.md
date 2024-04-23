@@ -2,7 +2,7 @@
 
 This tool is intended to be used for data generation in Bioinformatics Machine Learning related tasks. You can use Seq2Vec to convert FASTA or FASTQ data sets into k-mer frequency vectors. We use memory mapped files to write faster and a multi-worker pipeline to vectorise the sequences.
 
-### Citation for algorithms
+### Citation
 
 ```bibtex
 @article{10.1093/bioinformatics/btaa441,
