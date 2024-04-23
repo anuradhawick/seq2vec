@@ -22,24 +22,6 @@ This tool is intended to be used for data generation in Bioinformatics Machine L
 }
 ```
 
-### Citation for this software
-
-[![DOI](https://zenodo.org/badge/362989776.svg)](https://zenodo.org/badge/latestdoi/362989776)
-
-```bibtex
-@software{anuradha_wickramarachchi_2021_5515743,
-  author       = {Anuradha Wickramarachchi},
-  title        = {anuradhawick/seq2vec: release v1.0},
-  month        = sep,
-  year         = 2021,
-  publisher    = {Zenodo},
-  version      = {v1.0},
-  doi          = {10.5281/zenodo.5515743},
-  url          = {https://doi.org/10.5281/zenodo.5515743}
-}
-```
-
-
 ## Downloading and Compiling
 
 First download the repository. The script named `build.sh` has all the required steps automated for easy compilation.
