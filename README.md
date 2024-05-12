@@ -1,5 +1,7 @@
 # Seq2Vec - DNA sequence vectorization
 
+## 🛑 a newer, faster and a complete tool is on the way - [https://github.com/anuradhawick/kmertools](https://github.com/anuradhawick/kmertools)
+
 This tool is intended to be used for data generation in Bioinformatics Machine Learning related tasks. You can use Seq2Vec to convert FASTA or FASTQ data sets into k-mer frequency vectors. We use memory mapped files to write faster and a multi-worker pipeline to vectorise the sequences.
 
 ### Citation
